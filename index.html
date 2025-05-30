@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Straight Bill of Lading</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 8.5in;
+            min-height: 10.5in;
+            margin: 0 auto;
+            padding: 0.2in;
+            box-sizing: border-box;
+            border: 1px solid #000;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .section {
+            margin-bottom: 10px;
+        }
+        .row {
+            display: flex;
+            margin-bottom: 3px;
+        }
+        .col {
+            flex: 1;
+            padding: 3px;
+            border: 1px solid #000;
+            min-height: 20px;
+            position: relative;
+        }
+        .col-header {
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+        .col-2 {
+            flex: 2;
+        }
+        .col-3 {
+            flex: 3;
+        }
+        .col-4 {
+            flex: 4;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: left;
+        }
+        .items-table th {
+            font-size: 10px;
+        }
+        .items-table td {
+            height: 18px;
+        }
+        .small-text {
+            font-size: 7px;
+            margin: 5px 0;
+        }
+        .signatures {
+            margin-top: 20px;
+        }
+        .divider {
+            border-bottom: 1px solid #000;
+            margin: 10px 0;
+        }
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        
+        /* Form field styles */
+        .form-input {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            resize: none;
+        }
+        
+        .form-textarea {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            resize: none;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+        
+        .form-textarea-limited {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            resize: none;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+        
+        .table-input {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+        }
+        
+        .checkbox-group {
+            font-size: 10px;
+            margin-top: 5px;
+        }
+        
+        .checkbox-item {
+            margin-bottom: 2px;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+            .download-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+    <div class="container" id="content">
+        <div class="header">
+            <div class="title">STRAIGHT BILL OF LADING - SHORT FORM - NOT NEGOTIABLE</div>
+            <div class="subtitle">ORIGINAL - NOT NEGOTIABLE</div>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER (FROM)</div>
+                    <textarea class="form-textarea-limited" rows="3" placeholder="Enter shipper information" maxlength="150"></textarea>
+                </div>
+                <div class="col col-2">
+                    <div class="col-header">DATE</div>
+                    <input type="date" class="form-input">
+                </div>
+                <div class="col">
+                    <div class="col-header">BILL OF LADING NUMBER</div>
+                    <input type="text" class="form-input" placeholder="BOL #">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-3" style="height: 60px;">
+                    <textarea class="form-textarea-limited" rows="3" style="height: 55px;" placeholder="Continue shipper info if needed" maxlength="150"></textarea>
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CONSIGNEE (TO)</div>
+                    <textarea class="form-textarea-limited" rows="3" style="height: 50px;" placeholder="Enter consignee information" maxlength="150"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER'S REFERENCE #</div>
+                    <input type="text" class="form-input" placeholder="Reference #">
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CONSIGNEE'S REFERENCE #</div>
+                    <input type="text" class="form-input" placeholder="Reference #">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">ORIGIN (CITY, STATE)</div>
+                    <input type="text" class="form-input" placeholder="City, State">
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">DESTINATION (CITY, STATE)</div>
+                    <input type="text" class="form-input" placeholder="City, State">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">CARRIER NAME</div>
+                    <input type="text" class="form-input" placeholder="Carrier Name">
+                </div>
+                <div class="col">
+                    <div class="col-header">SCAC</div>
+                    <input type="text" class="form-input" placeholder="SCAC">
+                </div>
+                <div class="col">
+                    <div class="col-header">PRO NUMBER</div>
+                    <input type="text" class="form-input" placeholder="PRO #">
+                </div>
+                <div class="col">
+                    <div class="col-header">TRAILER #</div>
+                    <input type="text" class="form-input" placeholder="Trailer #">
+                </div>
+                <div class="col">
+                    <div class="col-header">SEAL #</div>
+                    <input type="text" class="form-input" placeholder="Seal #">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">SPECIAL INSTRUCTIONS</div>
+                    <textarea class="form-textarea" rows="2" style="height: 25px;" placeholder="Enter special instructions"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th width="10%">HANDLING UNITS</th>
+                        <th width="10%">PACKAGE TYPE</th>
+                        <th width="10%">HM</th>
+                        <th width="40%">DESCRIPTION OF ARTICLES, SPECIAL MARKS AND EXCEPTIONS</th>
+                        <th width="15%">WEIGHT (LBS)</th>
+                        <th width="15%">NMFC # / CLASS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="table-input" placeholder="Units"></td>
+                        <td><input type="text" class="table-input" placeholder="Type"></td>
+                        <td><input type="text" class="table-input" placeholder="HM"></td>
+                        <td><input type="text" class="table-input" placeholder="Description"></td>
+                        <td><input type="text" class="table-input" placeholder="Weight"></td>
+                        <td><input type="text" class="table-input" placeholder="NMFC/Class"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">TOTAL HANDLING UNITS</div>
+                    <input type="text" class="form-input" placeholder="Total Units">
+                </div>
+                <div class="col">
+                    <div class="col-header">TOTAL PACKAGES</div>
+                    <input type="text" class="form-input" placeholder="Total Packages">
+                </div>
+                <div class="col">
+                    <div class="col-header">TOTAL WEIGHT</div>
+                    <input type="text" class="form-input" placeholder="Total Weight">
+                </div>
+                <div class="col col-2">
+                    <div class="col-header">CUBE (OPTIONAL)</div>
+                    <input type="text" class="form-input" placeholder="Cube">
+                </div>
+            </div>
+        </div>
+
+        <div class="section small-text">
+            <p>RECEIVED, subject to the classifications and lawfully filed tariffs in effect on the date of the issue of this Bill of Lading, the property described above in apparent good order, except as noted (contents and condition of contents of packages unknown), marked, consigned, and destined as indicated above which said carrier (the word carrier being understood throughout this contract as meaning any person or corporation in possession of the property under the contract) agrees to carry to its usual place of delivery at said destination, if on its route, otherwise to deliver to another carrier on the route to said destination. It is mutually agreed as to each carrier of all or any of said property over all or any portion of said route to destination and as to each party at any time interested in all or any said property, that every service to be performed hereunder shall be subject to all the bill of lading terms and conditions in the governing classification on the date of shipment.</p>
+            <p>Shipper hereby certifies that he is familiar with all the bill of lading terms and conditions in the governing classification and the said terms and conditions are hereby agreed to by the shipper and accepted for himself and his assigns.</p>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col col-2">
+                    <div class="col-header">FREIGHT CHARGES</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prepaid" name="freight">
+                            <label for="prepaid">PREPAID</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="collect" name="freight">
+                            <label for="collect">COLLECT</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="thirdparty" name="freight">
+                            <label for="thirdparty">3RD PARTY</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-4">
+                    <div class="col-header">C.O.D. AMOUNT: $<input type="text" class="form-input" style="display: inline; width: 60%;" placeholder="Amount"></div>
+                    <div class="checkbox-group">
+                        <div>FEE TERMS:</div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="codcollect" name="cod">
+                            <label for="codcollect">COLLECT</label>
+                            <input type="checkbox" id="codprepaid" name="cod" style="margin-left: 10px;">
+                            <label for="codprepaid">PREPAID</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="signatures">
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER SIGNATURE / DATE</div>
+                    <div style="height: 25px; margin-top: 5px;">
+                        <input type="text" class="form-input" placeholder="Signature / Date">
+                    </div>
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CARRIER SIGNATURE / PICKUP DATE</div>
+                    <div style="height: 25px; margin-top: 5px;">
+                        <input type="text" class="form-input" placeholder="Signature / Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER (PRINT NAME)</div>
+                    <input type="text" class="form-input" placeholder="Print Name">
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CARRIER (PRINT NAME)</div>
+                    <input type="text" class="form-input" placeholder="Print Name">
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="margin-top: 20px;">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">CONSIGNEE SIGNATURE / DELIVERY DATE</div>
+                    <div style="height: 45px; margin-top: 5px;">
+                        <input type="text" class="form-input" placeholder="Signature / Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">CONSIGNEE (PRINT NAME)</div>
+                    <input type="text" class="form-input" placeholder="Print Name">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Limit line breaks in multi-line fields
+        function limitLineBreaks(textarea, maxLines) {
+            textarea.addEventListener('input', function() {
+                const lines = this.value.split('\n');
+                if (lines.length > maxLines) {
+                    lines.splice(maxLines);
+                    this.value = lines.join('\n');
+                }
+            });
+            
+            textarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const lines = this.value.split('\n');
+                    if (lines.length >= maxLines) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+
+        // Apply line break limits to specific fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const limitedFields = document.querySelectorAll('.form-textarea-limited');
+            limitedFields.forEach(field => {
+                limitLineBreaks(field, 3);
+            });
+        });
+
+        // Make checkboxes mutually exclusive for freight charges
+        document.querySelectorAll('input[name="freight"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    document.querySelectorAll('input[name="freight"]').forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+            });
+        });
+
+        // Make checkboxes mutually exclusive for COD terms
+        document.querySelectorAll('input[name="cod"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    document.querySelectorAll('input[name="cod"]').forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+            });
+        });
+
+        function downloadPDF() {
+            // Hide the download button when generating PDF
+            const btn = document.querySelector('.download-btn');
+            btn.style.display = 'none';
+            
+            // Options for the PDF
+            const options = {
+                margin: 0,
+                filename: 'straight_bill_of_lading.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            // Get the element to convert
+            const element = document.getElementById('content');
+            
+            // Generate the PDF
+            html2pdf().from(element).set(options).save().then(() => {
+                // Show the button again after PDF is generated
+                btn.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
