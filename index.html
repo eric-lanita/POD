@@ -3,211 +3,541 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lanita Specialized - Internal Portal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Straight Bill of Lading</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23003366'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='10' font-weight='bold' text-anchor='middle' fill='white'%3EPOD%3C/text%3E%3C/svg%3E">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
+            font-size: 12px;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
         }
         .container {
-            max-width: 1200px;
+            width: 8.5in;
+            min-height: 9.5in;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0.1in;
+            box-sizing: border-box;
+            border: 1px solid #000;
         }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 0;
+        .letterhead {
             text-align: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #000;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2rem;
-        }
-        header p {
-            margin: 0.5rem 0 0;
-            font-size: 1rem;
-            opacity: 0.9;
+        .company-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 2px;
         }
         .company-info {
-            margin: 1.5rem 0;
+            font-size: 11px;
+            margin-bottom: 0;
+        }
+        .header {
             text-align: center;
+            margin-bottom: 6px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 6px;
         }
-        .company-info h2 {
-            margin: 0;
-            font-size: 1.5rem;
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
         }
-        .company-info p {
-            margin: 0.5rem 0 0;
-            color: #666;
-        }
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #2c3e50;
-            padding: 0.8rem 1.5rem;
-            border: 2px solid #2c3e50;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .nav-links a:hover {
-            background-color: #2c3e50;
-            color: white;
-            transform: translateY(-2px);
-        }
-        .nav-links a i {
-            font-size: 1.1rem;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            background-color: #2c3e50;
-            color: white;
-            margin-top: 2rem;
-        }
-        #pinForm {
-            max-width: 400px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        #pinInput {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        #submitPin {
-            width: 100%;
-            padding: 10px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #submitPin:hover {
-            background-color: #34495e;
-        }
-        #errorMessage {
-            color: red;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 5px;
         }
         .section {
-            margin: 2rem 0;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 5px;
         }
-        .section-title {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #2c3e50;
+        .row {
+            display: flex;
+            margin-bottom: 3px;
         }
-        .protected-content {
-            display: none;
+        .col {
+            flex: 1;
+            padding: 3px;
+            border: 1px solid #000;
+            min-height: 20px;
+            position: relative;
         }
-        .lock-icon {
-            color: #e74c3c;
+        .col-header {
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+        .col-2 {
+            flex: 2;
+        }
+        .col-3 {
+            flex: 3;
+        }
+        .col-4 {
+            flex: 4;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: left;
+        }
+        .items-table th {
+            font-size: 10px;
+        }
+        .items-table td {
+            height: 18px;
+        }
+        .small-text {
+            font-size: 6px;
+            margin: 3px 0;
+        }
+        .signatures {
+            margin-top: 15px;
+        }
+        .divider {
+            border-bottom: 1px solid #000;
+            margin: 10px 0;
+        }
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        
+        /* Form field styles */
+        .form-input {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            resize: none;
+        }
+        
+        .form-textarea {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            resize: none;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+        
+        .form-textarea-limited {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            resize: none;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+        
+        .table-input {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            outline: none;
+        }
+        
+        .checkbox-group {
+            font-size: 10px;
+            margin-top: 5px;
+        }
+        
+        .checkbox-item {
+            margin-bottom: 2px;
+        }
+        
+        input[type="checkbox"] {
             margin-right: 5px;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+            .download-btn {
+                display: none !important;
+            }
+            input::placeholder,
+            textarea::placeholder {
+                color: transparent !important;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Lanita Specialized</h1>
-            <p>Internal Company Portal</p>
+    <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+    <div class="container" id="content">
+        <div class="letterhead">
+            <div class="company-name">Lanita Specialized LLC</div>
+            <div class="company-info">PO Box 336 • Mt Aetna, PA 19544 • PH. 717.933.5100</div>
         </div>
-    </header>
-
-    <main class="container">
-        <div class="company-info">
-            <h2>Welcome to Lanita Specialized</h2>
-            <p>Mt Aetna, PA 19544</p>
+        
+        <div class="header">
+            <div class="title">STRAIGHT BILL OF LADING - SHORT FORM - NOT NEGOTIABLE</div>
+            <div class="subtitle">ORIGINAL - NOT NEGOTIABLE</div>
         </div>
 
-        <!-- Public Section -->
         <div class="section">
-            <h3 class="section-title">Resources</h3>
-            <div class="nav-links">
-                <a href="lanitabol.html"><i class="fas fa-file-alt"></i> Lanita Bol</a>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER (FROM)</div>
+                    <textarea class="form-textarea-limited" rows="3" placeholder="Enter shipper information" maxlength="150"></textarea>
+                </div>
+                <div class="col col-2">
+                    <div class="col-header">DATE</div>
+                    <input type="date" class="form-input">
+                </div>
+                <div class="col">
+                    <div class="col-header">BILL OF LADING NUMBER</div>
+                    <input type="text" class="form-input" placeholder="BOL #">
+                </div>
             </div>
-        </div>
-
-        <!-- Protected Section -->
-        <div class="section">
-            <h3 class="section-title">
-                <span class="lock-icon">🔒</span>
-                Protected Resources
-            </h3>
-            <div id="pinForm">
-                <h4>Enter PIN to Access Protected Content</h4>
-                <input type="password" id="pinInput" placeholder="Enter PIN" maxlength="4">
-                <button id="submitPin">Submit</button>
-                <p id="errorMessage">Incorrect PIN. Please try again.</p>
+            <div class="row">
+                <div class="col col-3" style="height: 50px;">
+                    <textarea class="form-textarea-limited" rows="3" style="height: 45px;" placeholder="Continue shipper info if needed" maxlength="150"></textarea>
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CONSIGNEE (TO)</div>
+                    <textarea class="form-textarea-limited" rows="3" style="height: 40px;" placeholder="Enter consignee information" maxlength="150"></textarea>
+                </div>
             </div>
-            <div class="protected-content">
-                <div class="nav-links">
-                    <a href="stickynote.html"><i class="fas fa-sticky-note"></i> Sticky Note</a>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER'S REFERENCE #</div>
+                    <input type="text" class="form-input" placeholder="Reference #">
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CONSIGNEE'S REFERENCE #</div>
+                    <input type="text" class="form-input" placeholder="Reference #">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">ORIGIN (CITY, STATE)</div>
+                    <input type="text" class="form-input" placeholder="City, State">
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">DESTINATION (CITY, STATE)</div>
+                    <input type="text" class="form-input" placeholder="City, State">
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Lanita Specialized. All rights reserved.</p>
+        <div class="section">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">CARRIER NAME</div>
+                    <input type="text" class="form-input" placeholder="Carrier Name">
+                </div>
+                <div class="col">
+                    <div class="col-header">SCAC</div>
+                    <input type="text" class="form-input" placeholder="SCAC">
+                </div>
+                <div class="col">
+                    <div class="col-header">PRO NUMBER</div>
+                    <input type="text" class="form-input" placeholder="PRO #">
+                </div>
+                <div class="col">
+                    <div class="col-header">TRAILER #</div>
+                    <input type="text" class="form-input" placeholder="Trailer #">
+                </div>
+                <div class="col">
+                    <div class="col-header">SEAL #</div>
+                    <input type="text" class="form-input" placeholder="Seal #">
+                </div>
+            </div>
         </div>
-    </footer>
 
+        <div class="section">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">SPECIAL INSTRUCTIONS</div>
+                    <textarea class="form-textarea" rows="2" style="height: 20px;" placeholder="Enter special instructions"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th width="10%">HANDLING UNITS</th>
+                        <th width="10%">PACKAGE TYPE</th>
+                        <th width="10%">HM</th>
+                        <th width="40%">DESCRIPTION OF ARTICLES, SPECIAL MARKS AND EXCEPTIONS</th>
+                        <th width="15%">WEIGHT (LBS)</th>
+                        <th width="15%">NMFC # / CLASS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="table-input" placeholder="Units"></td>
+                        <td><input type="text" class="table-input" placeholder="Type"></td>
+                        <td><input type="text" class="table-input" placeholder="HM"></td>
+                        <td><input type="text" class="table-input" placeholder="Description"></td>
+                        <td><input type="text" class="table-input" placeholder="Weight"></td>
+                        <td><input type="text" class="table-input" placeholder="NMFC/Class"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                        <td><input type="text" class="table-input"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">TOTAL HANDLING UNITS</div>
+                    <input type="text" class="form-input" placeholder="Total Units">
+                </div>
+                <div class="col">
+                    <div class="col-header">TOTAL PACKAGES</div>
+                    <input type="text" class="form-input" placeholder="Total Packages">
+                </div>
+                <div class="col">
+                    <div class="col-header">TOTAL WEIGHT</div>
+                    <input type="text" class="form-input" placeholder="Total Weight">
+                </div>
+                <div class="col col-2">
+                    <div class="col-header">CUBE (OPTIONAL)</div>
+                    <input type="text" class="form-input" placeholder="Cube">
+                </div>
+            </div>
+        </div>
+
+        <div class="section small-text">
+            <p>RECEIVED, subject to the classifications and lawfully filed tariffs in effect on the date of the issue of this Bill of Lading, the property described above in apparent good order, except as noted (contents and condition of contents of packages unknown), marked, consigned, and destined as indicated above which said carrier (the word carrier being understood throughout this contract as meaning any person or corporation in possession of the property under the contract) agrees to carry to its usual place of delivery at said destination, if on its route, otherwise to deliver to another carrier on the route to said destination. It is mutually agreed as to each carrier of all or any of said property over all or any portion of said route to destination and as to each party at any time interested in all or any said property, that every service to be performed hereunder shall be subject to all the bill of lading terms and conditions in the governing classification on the date of shipment.</p>
+            <p>Shipper hereby certifies that he is familiar with all the bill of lading terms and conditions in the governing classification and the said terms and conditions are hereby agreed to by the shipper and accepted for himself and his assigns.</p>
+        </div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col col-2">
+                    <div class="col-header">FREIGHT CHARGES</div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prepaid" name="freight">
+                            <label for="prepaid">PREPAID</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="collect" name="freight">
+                            <label for="collect">COLLECT</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="thirdparty" name="freight">
+                            <label for="thirdparty">3RD PARTY</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-4">
+                    <div class="col-header">C.O.D. AMOUNT: $<input type="text" class="form-input" style="display: inline; width: 60%;" placeholder="Amount"></div>
+                    <div class="checkbox-group">
+                        <div>FEE TERMS:</div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="codcollect" name="cod">
+                            <label for="codcollect">COLLECT</label>
+                            <input type="checkbox" id="codprepaid" name="cod" style="margin-left: 10px;">
+                            <label for="codprepaid">PREPAID</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="signatures">
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER SIGNATURE / DATE</div>
+                    <div style="height: 20px; margin-top: 3px;">
+                        <input type="text" class="form-input" placeholder="Signature / Date">
+                    </div>
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CARRIER SIGNATURE / PICKUP DATE</div>
+                    <div style="height: 20px; margin-top: 3px;">
+                        <input type="text" class="form-input" placeholder="Signature / Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-3">
+                    <div class="col-header">SHIPPER (PRINT NAME)</div>
+                    <input type="text" class="form-input" placeholder="Print Name">
+                </div>
+                <div class="col col-3">
+                    <div class="col-header">CARRIER (PRINT NAME)</div>
+                    <input type="text" class="form-input" placeholder="Print Name">
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="margin-top: 15px;">
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">CONSIGNEE SIGNATURE / DELIVERY DATE</div>
+                    <div style="height: 35px; margin-top: 3px;">
+                        <input type="text" class="form-input" placeholder="Signature / Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="col-header">CONSIGNEE (PRINT NAME)</div>
+                    <input type="text" class="form-input" placeholder="Print Name">
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // Set your PIN here (you can change this to any 4-digit number)
-        const correctPin = '7630';
-        
-        document.getElementById('submitPin').addEventListener('click', function() {
-            const enteredPin = document.getElementById('pinInput').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const protectedContent = document.querySelector('.protected-content');
-            const pinForm = document.getElementById('pinForm');
+        // Limit line breaks in multi-line fields
+        function limitLineBreaks(textarea, maxLines) {
+            textarea.addEventListener('input', function() {
+                const lines = this.value.split('\n');
+                if (lines.length > maxLines) {
+                    lines.splice(maxLines);
+                    this.value = lines.join('\n');
+                }
+            });
             
-            if (enteredPin === correctPin) {
-                protectedContent.style.display = 'block';
-                pinForm.style.display = 'none';
-                errorMessage.style.display = 'none';
-            } else {
-                errorMessage.style.display = 'block';
-                document.getElementById('pinInput').value = '';
-            }
+            textarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const lines = this.value.split('\n');
+                    if (lines.length >= maxLines) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+
+        // Apply line break limits to specific fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const limitedFields = document.querySelectorAll('.form-textarea-limited');
+            limitedFields.forEach(field => {
+                limitLineBreaks(field, 3);
+            });
         });
 
-        // Allow Enter key to submit PIN
-        document.getElementById('pinInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('submitPin').click();
-            }
+        // Make checkboxes mutually exclusive for freight charges
+        document.querySelectorAll('input[name="freight"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    document.querySelectorAll('input[name="freight"]').forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+            });
         });
+
+        // Make checkboxes mutually exclusive for COD terms
+        document.querySelectorAll('input[name="cod"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    document.querySelectorAll('input[name="cod"]').forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+            });
+        });
+
+        function downloadPDF() {
+            // Hide the download button when generating PDF
+            const btn = document.querySelector('.download-btn');
+            btn.style.display = 'none';
+            
+            // Options for the PDF
+            const options = {
+                margin: 0,
+                filename: 'straight_bill_of_lading.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            // Get the element to convert
+            const element = document.getElementById('content');
+            
+            // Generate the PDF
+            html2pdf().from(element).set(options).save().then(() => {
+                // Show the button again after PDF is generated
+                btn.style.display = 'block';
+            });
+        }
     </script>
 </body>
-</html> 
+</html>
