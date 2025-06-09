@@ -14,17 +14,18 @@
             padding: 0;
         }
         .container {
-            width: 8.5in;
-            min-height: 9.5in;
+            width: 8in;
+            height: 10.5in;
             margin: 0 auto;
             padding: 0.1in;
             box-sizing: border-box;
             border: 1px solid #000;
+            overflow: hidden;
         }
         .letterhead {
             text-align: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
             border-bottom: 1px solid #000;
         }
         .company-name {
@@ -38,9 +39,9 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             border-bottom: 2px solid #000;
-            padding-bottom: 6px;
+            padding-bottom: 4px;
         }
         .title {
             font-size: 18px;
@@ -53,17 +54,17 @@
             margin-bottom: 5px;
         }
         .section {
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         .row {
             display: flex;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
         .col {
             flex: 1;
-            padding: 3px;
+            padding: 2px;
             border: 1px solid #000;
-            min-height: 20px;
+            min-height: 18px;
             position: relative;
         }
         .col-header {
@@ -93,18 +94,18 @@
             font-size: 10px;
         }
         .items-table td {
-            height: 18px;
+            height: 16px;
         }
         .small-text {
             font-size: 6px;
-            margin: 3px 0;
+            margin: 2px 0;
         }
         .signatures {
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .divider {
             border-bottom: 1px solid #000;
-            margin: 10px 0;
+            margin: 8px 0;
         }
         .download-btn {
             position: fixed;
@@ -190,14 +191,22 @@
         }
         
         @media print {
+            @page {
+                size: letter;
+                margin: 0.25in;
+            }
             body {
                 margin: 0;
                 padding: 0;
+                height: 10.5in;
+                overflow: hidden;
             }
             .container {
                 width: 100%;
                 height: 100%;
                 border: none;
+                overflow: hidden;
+                padding: 0;
             }
             .download-btn {
                 display: none !important;
@@ -525,8 +534,21 @@
                 margin: 0,
                 filename: 'straight_bill_of_lading.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    letterRendering: true,
+                    scrollY: 0,
+                    windowHeight: 11 * 96 // 11 inches in pixels at 96 DPI
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait',
+                    compress: true,
+                    hotfixes: ['px_scaling']
+                },
+                pagebreak: { mode: 'avoid-all' }
             };
             
             // Get the element to convert
